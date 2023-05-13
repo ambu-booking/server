@@ -1,15 +1,29 @@
-import express, { Express, Request, Response } from 'express';
-import dotenv from 'dotenv';
+import { PrismaClient } from "@prisma/client";
+import { ApolloServer } from "apollo-server";
 
-dotenv.config();
+const prisma = new PrismaClient();
 
-const app: Express = express();
-const port = process.env.PORT;
+const typeDefs = `
+  type Company {
+    id: String!
+    name: String
+  }
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server');
-});
+  type Query {
+    allCompanies: [Company!]!
+  }
+  type Mutation {
+    createCompany:[Company!]
+  }
+`;
 
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
-});
+const resolvers = {
+  Query: {
+    allCompanies: () => {
+      return prisma.company.findMany();
+    },
+  },
+};
+
+const server = new ApolloServer({ resolvers, typeDefs });
+server.listen({ port: process.env.PORT });
