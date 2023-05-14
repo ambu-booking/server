@@ -1,7 +1,7 @@
 import "reflect-metadata";
-import { ApolloServer } from "apollo-server";
 import { buildSchemaSync } from "type-graphql";
 import { CompanyResolver } from "./graphql/resolvers/CompanyResolver";
+import { ApolloServer } from "apollo-server";
 
 async function startServer() {
   const schema = buildSchemaSync({

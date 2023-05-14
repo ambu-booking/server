@@ -1,7 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import { Resolver, Query } from "type-graphql";
 import { Company } from "../schema/Company";
-const prisma = new PrismaClient();
+import prisma from "../../../lib/prisma";
 
 @Resolver()
 export class CompanyResolver {
