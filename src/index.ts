@@ -1,29 +1,17 @@
-import { PrismaClient } from "@prisma/client";
+import "reflect-metadata";
 import { ApolloServer } from "apollo-server";
+import { buildSchemaSync } from "type-graphql";
+import { CompanyResolver } from "./graphql/resolvers/CompanyResolver";
 
-const prisma = new PrismaClient();
+async function startServer() {
+  const schema = buildSchemaSync({
+    resolvers: [CompanyResolver],
+  });
 
-const typeDefs = `
-  type Company {
-    id: String!
-    name: String
-  }
+  const server = new ApolloServer({ schema });
 
-  type Query {
-    allCompanies: [Company!]!
-  }
-  type Mutation {
-    createCompany:[Company!]
-  }
-`;
+  const { url } = await server.listen(process.env.PORT);
+  console.log(`🚀  Server ready at ${url}`);
+}
 
-const resolvers = {
-  Query: {
-    allCompanies: () => {
-      return prisma.company.findMany();
-    },
-  },
-};
-
-const server = new ApolloServer({ resolvers, typeDefs });
-server.listen({ port: process.env.PORT });
+startServer();
