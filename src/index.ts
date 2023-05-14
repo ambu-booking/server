@@ -1,15 +1,17 @@
-import express, { Express, Request, Response } from 'express';
-import dotenv from 'dotenv';
+import "reflect-metadata";
+import { buildSchemaSync } from "type-graphql";
+import { CompanyResolver } from "./graphql/resolvers/CompanyResolver";
+import { ApolloServer } from "apollo-server";
 
-dotenv.config();
+async function startServer() {
+  const schema = buildSchemaSync({
+    resolvers: [CompanyResolver],
+  });
 
-const app: Express = express();
-const port = process.env.PORT;
+  const server = new ApolloServer({ schema });
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server');
-});
+  const { url } = await server.listen(process.env.PORT);
+  console.log(`🚀  Server ready at ${url}`);
+}
 
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
-});
+startServer();
