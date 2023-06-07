@@ -11,16 +11,18 @@ datasource db {
 }
 
 model Company {
-  id         String    @id @default(uuid())
-  name       String
+  id         String    @id @unique @default(uuid())
+  name       String    @unique
   location   Location? @relation(fields: [locationId], references: [id])
   locationId String?   @unique
 }
 
 model Location {
-  id        String   @id @default(uuid())
+  id        String   @id @unique @default(uuid())
   adress    String
   city      String
   post_code Int
   Company   Company?
+
+  @@unique([adress, city, post_code])
 }
