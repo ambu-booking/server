@@ -53,8 +53,18 @@ class CompanyService {
   }
 
   async deleteCompany(id: string): Promise<Company> {
-    await prisma.company.findFirstOrThrow({ where: { id } });
-    return prisma.company.delete({ where: { id } });
+    const company = await prisma.company.findFirst({
+      where: { id },
+      include: { location: true },
+    });
+    if (!company) {
+      throw new Error(`Company with ID ${id} not found`);
+    }
+    const deletedCompany = await prisma.company.delete({ where: { id } });
+    if (company.location) {
+      await prisma.location.delete({ where: { id: company.location.id } });
+    }
+    return deletedCompany;
   }
 }
 

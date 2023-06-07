@@ -13,7 +13,7 @@ datasource db {
 model Company {
   id         String    @id @unique @default(uuid())
   name       String    @unique
-  location   Location? @relation(fields: [locationId], references: [id])
+  location   Location? @relation(fields: [locationId], references: [id], onDelete: Cascade)
   locationId String?   @unique
 }
 
