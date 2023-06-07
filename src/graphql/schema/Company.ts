@@ -1,4 +1,5 @@
 import { ObjectType, Field } from "type-graphql";
+import { Location } from "./Location";
 
 @ObjectType()
 export class Company {
@@ -7,4 +8,7 @@ export class Company {
 
   @Field(() => String)
   name: string;
+
+  @Field(() => Location)
+  location?: Location;
 }

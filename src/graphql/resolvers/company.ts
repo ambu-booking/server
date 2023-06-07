@@ -7,12 +7,21 @@ const company = new CompanyService();
 @Resolver()
 export class CompanyResolver {
   @Query(() => [Company])
-  async companies() {
-    return await company.getCompanies();
+  async companies(
+    @Arg("name", { nullable: true }) name?: string,
+    @Arg("city", { nullable: true }) city?: string,
+    @Arg("postCode", { nullable: true }) postCode?: number
+  ) {
+    return await company.getCompanies(name, city, postCode);
   }
   @Mutation(() => Company)
-  async create(@Arg("name") name: string): Promise<Company> {
-    return await company.createCompany(name);
+  async create(
+    @Arg("name") name: string,
+    @Arg("adress") adress: string,
+    @Arg("city") city: string,
+    @Arg("postCode") postCode: number
+  ): Promise<Company> {
+    return await company.createCompany({ name, adress, city, postCode });
   }
   @Mutation(() => Company)
   async update(
