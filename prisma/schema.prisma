@@ -19,9 +19,9 @@ model Company {
 
 model Location {
   id        String   @id @unique @default(uuid())
-  adress    String?
-  city      String?
-  post_code Int?
+  adress    String
+  city      String
+  post_code Int
   Company   Company?
 
   @@unique([adress, city, post_code])
