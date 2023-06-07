@@ -6,24 +6,42 @@ interface CreateArgs {
   name: string;
   adress: string;
   city: string;
-  post_code: number;
+  postCode: number;
 }
 
 class CompanyService {
-  async getCompanies(): Promise<Company[]> {
-    return prisma.company.findMany({ include: { location: true } });
+  async getCompanies(
+    name?: string,
+    city?: string,
+    postCode?: number
+  ): Promise<Company[]> {
+    return prisma.company.findMany({
+      where: {
+        name: { contains: name?.trim(), mode: "insensitive" },
+        location: {
+          city: { contains: city?.trim(), mode: "insensitive" },
+          post_code: { equals: postCode },
+        },
+      },
+      include: { location: true },
+    });
   }
 
   async createCompany({
     name,
     adress,
     city,
-    post_code,
+    postCode,
   }: CreateArgs): Promise<Company> {
     const companyName = name.trim();
-    if (!companyName) {
-      throw new Error("Company's name can't be empty");
+    const companyAdress = adress.trim();
+    const companyCity = city.trim();
+    const companyPostCode = parseInt(postCode.toString().trim());
+
+    if (!companyName || !companyAdress || !companyCity || !companyPostCode) {
+      throw new Error("All fields must be provided");
     }
+
     return prisma.$transaction(async (prisma) => {
       const company = await prisma.company.create({
         data: {
@@ -32,9 +50,9 @@ class CompanyService {
       });
       const location = await prisma.location.create({
         data: {
-          adress,
-          city,
-          post_code,
+          adress: companyAdress,
+          city: companyCity,
+          post_code: companyPostCode,
           Company: {
             connect: { id: company.id },
           },
