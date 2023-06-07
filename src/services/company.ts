@@ -8,10 +8,15 @@ class CompanyService {
   }
 
   async createCompany(name: string): Promise<Company> {
-    return prisma.company.create({ data: { name } });
+    const companyName = name.trim();
+    if (!companyName) {
+      throw new Error("Company's name can't be empty");
+    }
+    return prisma.company.create({ data: { name: companyName } });
   }
 
   async updateCompany(id: string, name: string): Promise<Company> {
+    await prisma.company.findFirstOrThrow({ where: { id } });
     return prisma.company.update({
       where: { id },
       data: { name },
@@ -19,6 +24,7 @@ class CompanyService {
   }
 
   async deleteCompany(id: string): Promise<Company> {
+    await prisma.company.findFirstOrThrow({ where: { id } });
     return prisma.company.delete({ where: { id } });
   }
 }
