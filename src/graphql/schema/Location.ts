@@ -1,14 +1,16 @@
 import { ObjectType, Field } from "type-graphql";
-import { Location } from "./Location";
 
 @ObjectType()
-export class Company {
+export class Location {
   @Field(() => String)
   id: string;
 
   @Field(() => String)
-  name: string;
+  adress: string;
 
-  @Field(() => Location)
-  location?: Location;
+  @Field(() => String)
+  city: string;
+
+  @Field(() => String)
+  post_code: number;
 }

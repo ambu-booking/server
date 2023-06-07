@@ -11,8 +11,13 @@ export class CompanyResolver {
     return await company.getCompanies();
   }
   @Mutation(() => Company)
-  async create(@Arg("name") name: string): Promise<Company> {
-    return await company.createCompany(name);
+  async create(
+    @Arg("name") name: string,
+    @Arg("adress") adress: string,
+    @Arg("city") city: string,
+    @Arg("post_code") post_code: number
+  ): Promise<Company> {
+    return await company.createCompany({ name, adress, city, post_code });
   }
   @Mutation(() => Company)
   async update(
