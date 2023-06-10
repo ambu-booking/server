@@ -7,31 +7,51 @@ const company = new CompanyService();
 @Resolver()
 export class CompanyResolver {
   @Query(() => [Company])
-  async companies(
+  async fetchCompanies(
     @Arg("name", { nullable: true }) name?: string,
     @Arg("city", { nullable: true }) city?: string,
     @Arg("postCode", { nullable: true }) postCode?: number
   ) {
-    return await company.getCompanies(name, city, postCode);
+    try {
+      return await company.getAll(name, city, postCode);
+    } catch (error) {
+      console.error("An error occurred while fetching companies:", error);
+      throw new Error("Failed to fetch companies");
+    }
   }
   @Mutation(() => Company)
-  async create(
+  async createCompany(
     @Arg("name") name: string,
     @Arg("adress") adress: string,
     @Arg("city") city: string,
     @Arg("postCode") postCode: number
   ): Promise<Company> {
-    return await company.createCompany({ name, adress, city, postCode });
+    try {
+      return await company.create({ name, adress, city, postCode });
+    } catch (error) {
+      console.error("An error occurred while creating a company:", error);
+      throw new Error("Failed to create a company");
+    }
   }
   @Mutation(() => Company)
-  async update(
+  async updateCompany(
     @Arg("id") id: string,
     @Arg("name") name: string
   ): Promise<Company> {
-    return await company.updateCompany(id, name);
+    try {
+      return await company.update(id, name);
+    } catch (error) {
+      console.error("An error occurred while updating a company:", error);
+      throw new Error("Failed to update a company");
+    }
   }
   @Mutation(() => Company)
-  async delete(@Arg("id") id: string): Promise<Company> {
-    return await company.deleteCompany(id);
+  async deleteCompany(@Arg("id") id: string): Promise<Company> {
+    try {
+      return await company.delete(id);
+    } catch (error) {
+      console.error("An error occurred while deteling a company:", error);
+      throw new Error("Failed to delete a company");
+    }
   }
 }
