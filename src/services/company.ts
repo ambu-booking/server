@@ -10,7 +10,7 @@ interface CreateArgs {
 }
 
 class CompanyService {
-  async getCompanies(
+  async getAll(
     name?: string,
     city?: string,
     postCode?: number
@@ -27,12 +27,7 @@ class CompanyService {
     });
   }
 
-  async createCompany({
-    name,
-    adress,
-    city,
-    postCode,
-  }: CreateArgs): Promise<Company> {
+  async create({ name, adress, city, postCode }: CreateArgs): Promise<Company> {
     const companyName = name.trim();
     const companyAdress = adress.trim();
     const companyCity = city.trim();
@@ -62,7 +57,7 @@ class CompanyService {
     });
   }
 
-  async updateCompany(id: string, name: string): Promise<Company> {
+  async update(id: string, name: string): Promise<Company> {
     await prisma.company.findFirstOrThrow({ where: { id } });
     return prisma.company.update({
       where: { id },
@@ -70,7 +65,7 @@ class CompanyService {
     });
   }
 
-  async deleteCompany(id: string): Promise<Company> {
+  async delete(id: string): Promise<Company> {
     const company = await prisma.company.findFirst({
       where: { id },
       include: { location: true },
