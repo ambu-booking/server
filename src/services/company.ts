@@ -4,34 +4,39 @@ const prisma = new PrismaClient();
 
 interface CreateArgs {
   name: string;
-  adress: string;
+  address: string;
   city: string;
-  postCode: number;
+  postCode: string;
 }
 
 class CompanyService {
   async getAll(
     name?: string,
     city?: string,
-    postCode?: number
+    postCode?: string
   ): Promise<Company[]> {
     return prisma.company.findMany({
       where: {
         name: { contains: name?.trim(), mode: "insensitive" },
         location: {
           city: { contains: city?.trim(), mode: "insensitive" },
-          post_code: { equals: postCode },
+          post_code: { contains: postCode?.trim(), mode: "insensitive" },
         },
       },
       include: { location: true },
     });
   }
 
-  async create({ name, adress, city, postCode }: CreateArgs): Promise<Company> {
+  async create({
+    name,
+    address,
+    city,
+    postCode,
+  }: CreateArgs): Promise<Company> {
     const companyName = name.trim();
-    const companyAdress = adress.trim();
+    const companyAdress = address.trim();
     const companyCity = city.trim();
-    const companyPostCode = parseInt(postCode.toString().trim());
+    const companyPostCode = postCode.trim();
 
     if (!companyName || !companyAdress || !companyCity || !companyPostCode) {
       throw new Error("All fields must be provided");
@@ -45,7 +50,7 @@ class CompanyService {
       });
       const location = await prisma.location.create({
         data: {
-          adress: companyAdress,
+          address: companyAdress,
           city: companyCity,
           post_code: companyPostCode,
           Company: {
