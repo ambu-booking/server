@@ -7,13 +7,13 @@ export class Location {
   id: string;
 
   @Field(() => String)
-  adress: string;
+  address: string;
 
   @Field(() => String)
   city: string;
 
   @Field(() => String)
-  post_code: number;
+  post_code: string;
 
   @Field(() => Company, { nullable: true })
   company?: Company;

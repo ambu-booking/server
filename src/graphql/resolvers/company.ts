@@ -10,7 +10,7 @@ export class CompanyResolver {
   async fetchCompanies(
     @Arg("name", { nullable: true }) name?: string,
     @Arg("city", { nullable: true }) city?: string,
-    @Arg("postCode", { nullable: true }) postCode?: number
+    @Arg("postCode", { nullable: true }) postCode?: string
   ) {
     try {
       return await company.getAll(name, city, postCode);
@@ -22,12 +22,12 @@ export class CompanyResolver {
   @Mutation(() => Company)
   async createCompany(
     @Arg("name") name: string,
-    @Arg("adress") adress: string,
+    @Arg("address") address: string,
     @Arg("city") city: string,
-    @Arg("postCode") postCode: number
+    @Arg("postCode") postCode: string
   ): Promise<Company> {
     try {
-      return await company.create({ name, adress, city, postCode });
+      return await company.create({ name, address, city, postCode });
     } catch (error) {
       console.error("An error occurred while creating a company:", error);
       throw new Error("Failed to create a company");
